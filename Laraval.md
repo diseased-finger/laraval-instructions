@@ -23,7 +23,7 @@ Models contain data that may be stored in a database, or viewed to the user inis
 
 Controllers (inside `/app/Http/Controllers`) is the place where  you call to your database using a Model. An example could be a 'create  account' page. Firstly, a GET method from inside the controller will be called without a model, and load the `View` with the PHP code in it. Then, the user clicks the create account button and it sends a `POST` request with a `User` model which the controller uses to `INSERT` something into the database.
 
-```
+```php
 // Example Controller. Routing is done in /routes, so scroll down to see how this actually works!
 
 public function ProductsController()
@@ -100,30 +100,29 @@ Go into `/app/Http/Controllers`, create `ProductsController` class, make it exte
 
 ```php
 <?php
+namespace App\Http\Controllers; // This PHP file is inside this namespace. Everytime you want to use this controller, you must use this namespace
 
-	namespace App\Http\Controllers; // This PHP file is inside this namespace. Everytime you want to use this controller, you must use this namespace
+use App\Http\Controllers\Controller; 
 
-	use App\Http\Controllers\Controller; 
+class ProductsController extends Controller
+{
+    // We can turn this function into a proper endpoint in the following instructions. I like to use the naming convention 'ServerMethod EndpointName'. This means method will handle a GET method for the /products endpoint
+    public function getProducts()
+    {
+        $p = array();
+        $p[] = 'Test Product 1';
+        $p[] = 'Test Product 2';
+        $p[] = 'Test Product 3';
 
-	class ProductsController extends Controller
-	{
-		// We can turn this function into a proper endpoint in the following instructions. I like to use the naming convention 'ServerMethod EndpointName'. This means method will handle a GET method for the /products endpoint
-        public function getProducts()
-        {
-            $p = array();
-            $p[] = 'Test Product 1';
-            $p[] = 'Test Product 2';
-            $p[] = 'Test Product 3';
-
-            // return view()     => This function returns the view
-            // 'products'        => Find the `products.blade.php`
-            // ->with('p' => $p) => to insert into the view
-   		 // 'p'                => variable name inside view
-			 // $p                 => data to populate 'p' variable
-            return view('products')
-                ->with('p', $p);
-       }
-	}
+        // return view()     => This function returns the view
+        // 'products'        => Find the `products.blade.php`
+        // ->with('p' => $p) => to insert into the view
+        // 'p'                => variable name inside view
+            // $p                 => data to populate 'p' variable
+        return view('products')
+            ->with('p', $p);
+    }
+}
 
 ```
 
@@ -131,7 +130,7 @@ Go into `/app/Http/Controllers`, create `ProductsController` class, make it exte
 
 Create the route (same as example above)
 
-```
+```php
 Route::controller(ProductsController::class)->group(function() {
 	Route::get('/products', 'getProducts');
 	Route::post('/products/create', 'postProducts');
@@ -142,7 +141,7 @@ Route::controller(ProductsController::class)->group(function() {
 
 Create a file called `products.blade.php` inside `/resources/views`. 
 
-```
+```php
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -190,40 +189,38 @@ Go into `/app/Models/Products.php` which was auto generated previously
 
 Add the following code inside the `Products` class
 
-```
-// Products Class 
-// ...
+```php
+/*
+* Table name inside the database
+* @var string
+*/
+protected $table = 'products';
 
-         * Table name inside the database
-         * @var string
-         */
-        protected $table = 'products';
+/**
+ * The column for the primary key
+ * @var string
+ */
+protected $primaryKey = 'id';
 
-        /**
-         * The column for the primary key
-         * @var string
-         */
-        protected $primaryKey = 'id';
+/**
+ * Decides if the $primaryKey is auto-incrementing. We'll set this to true since the database will store IDs as
+ * integers for simplicity
+ * @var bool
+ */
+public $incrementing = true;
 
-        /**
-         * Decides if the $primaryKey is auto-incrementing. We'll set this to true since the database will store IDs as
-         * integers for simplicity
-         * @var bool
-         */
-        public $incrementing = true;
+/**
+ * Data type to store primary key as
+ * @var string
+ */
+protected $keyType = 'int';
 
-        /**
-         * Data type to store primary key as
-         * @var string
-         */
-        protected $keyType = 'int';
-
-        /**
-         * What database connection to use. Just keep it is as MySQl unless you really want to use multiple different
-         * databases.
-         * @var string
-         */
-        protected $connection = 'mysql';
+/**
+ * What database connection to use. Just keep it is as MySQl unless you really want to use multiple different
+ * databases.
+ * @var string
+ */
+protected $connection = 'mysql';
 
 // ...
 
@@ -236,12 +233,12 @@ We want to populate the database by default. We can do this by modifying `Databa
 
 Go into the `public function run() : void` or create it if it does not exist. Add the following lines underneath the comments:
 
-```
-        DB::table('products')->insert([
-            'name' => 'Some Product', // name column = 'Some Product`
-            'description' => Str::random(100),
-            'price' => 20
-        ]);
+```php
+DB::table('products')->insert([
+    'name' => 'Some Product', // name column = 'Some Product`
+    'description' => Str::random(100),
+    'price' => 20
+]);
 ```
 
 #### Creating Database Migration
@@ -254,13 +251,13 @@ Go into the most recent migration and modify the `up()` function. You want to re
 
 Add them as such:
 
-```
-        Schema::create('product', function (Blueprint $table) {
-            $table->id();                  // Id Column
-            $table->string('name');        // Name Column
-            $table->string('description'); // Description Column
-            $table->float('price');        // Price Column
-        });
+```php
+Schema::create('product', function (Blueprint $table) {
+    $table->id();                  // Id Column
+    $table->string('name');        // Name Column
+    $table->string('description'); // Description Column
+    $table->float('price');        // Price Column
+});
 ```
 
 
@@ -278,7 +275,7 @@ Now that we finally have a database with some stuff in it, we can populate our l
 
 Go back into `ProductsController` and lets start creating a query using Query Bulider. You may want to view the documentation for this as it contains more information about queries you can create [here](https://laravel.com/docs/10.x/queries)
 
-```
+```php
 // select * from product
 // DB::table('product') => Load the product table
 // ->get()              => Get everything from the product table
@@ -291,14 +288,14 @@ That new array we have is very special. Each element inside the array is a recor
 
 With that information, you should change your `@foreach` loop inside the view to reflect these new changes
 
-```
- @foreach($p as $product)
-                <tr>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>${{ $product->price }}</td>
-                </tr>
-            @endforeach
+```php
+@foreach($p as $product)
+    <tr>
+        <td>{{ $product->name }}</td>
+        <td>{{ $product->description }}</td>
+        <td>${{ $product->price }}</td>
+    </tr>
+@endforeach
 ```
 
 (The description will be very large because we set it equal to random text in the `ProductFactory`. You can obviously change it to something more sensible, but I'm lazy).
