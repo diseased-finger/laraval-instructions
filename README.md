@@ -1,5 +1,7 @@
 # Laraval
 
+Laraval looks extremely complicated, but based on the fact I could pick it up in about an hour, it shouldn't be that much harder for you. Don't feel to intimidated, even though this single `README.md` file is about 1000 words long. This will be much easier to read than the documentation, however, if you are stuck, you should absolutely check out the [documentation online](https://laravel.com/docs/10.x).
+
 ## Setup
 
 1. CD into project directory. For me, I'll use the command: `cd ~/Projects`
@@ -11,9 +13,7 @@ cd YOUR-APPLICATION-NAME
 ```
 4. Application should be at http://localhost
 
-## Project structure cheat sheet
-
-Laraval is very intimidating at first, however I'll try to explain what each directory does
+## Directory Structure
 
 ### `/app`
 
@@ -90,7 +90,7 @@ Route::controller(ProductsController::class)->group(function() {
 
 Now that you know this, you should go back and re-read the `app`
 
-## Create products list page
+## Example Web Page
 
 This example, we will create a page to display a list of products
 
