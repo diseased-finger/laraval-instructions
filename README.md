@@ -252,11 +252,11 @@ DB::table('products')->insert([
 
 #### Creating Database Migration
 
-We now want to create the table. We can do this automatically using database migrations. As before, go into the terminal interface in your docker container and run `php artisan make:migration create_product_table`. If you are curious as to what that did, you can go into `database/migrations/{most recent migration}`, and have a look! If something looks not right, roll back the migration using `php artisan migrate:rollback`, and find out what happened.
+We now want to create the table. We can do this automatically using database migrations... is what I wolud say if Laraval was actually good. As before, go into the terminal interface in your docker container and run `php artisan make:migration create_product_table`. If you are curious as to what that did, you can go into `database/migrations/{most recent migration}`, and have a look! If something looks not right, roll back the migration using `php artisan migrate:rollback`, and find out what happened.
 
-**Fuck Laraval Database Migrations**
+I personally don't understand how migrations work. Aparently they are supposed to automatically load the columns as you need them, but that clearly is not the case as it has not with `DatabaseSeeder.php`. In other words; **Fuck Laraval Database Migrations**. There is probably a way to do it somewhere, but I'm not sure at the moment
 
-Go into the most recent migration and modify the `up()` function. You want to replace the current `product` table creation because you'll notice how NONE of the columns we want are inside of it. 
+To get around this issue, go into the most recent migration and modify the `up()` function. You want to replace the current `product` table creation because you'll notice how NONE of the columns we want are inside of it. 
 
 Add them as such:
 
