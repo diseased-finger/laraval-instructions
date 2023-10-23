@@ -190,39 +190,48 @@ Go into `/app/Models/Products.php` which was auto generated previously
 Add the following code inside the `Products` class
 
 ```php
-/*
-* Table name inside the database
-* @var string
-*/
-protected $table = 'products';
 
-/**
- * The column for the primary key
- * @var string
- */
-protected $primaryKey = 'id';
+<?php
 
-/**
- * Decides if the $primaryKey is auto-incrementing. We'll set this to true since the database will store IDs as
- * integers for simplicity
- * @var bool
- */
-public $incrementing = true;
+	namespace App\Models;
 
-/**
- * Data type to store primary key as
- * @var string
- */
-protected $keyType = 'int';
+	use Illuminate\Database\Eloquent\Model;
 
-/**
- * What database connection to use. Just keep it is as MySQl unless you really want to use multiple different
- * databases.
- * @var string
- */
-protected $connection = 'mysql';
+    class Product extends Model
+    {
+        /**
+         * Table name inside the database
+         * @var string
+         */
+        protected $table = 'product';
 
-// ...
+        /**
+         * The column for the primary key
+         * @var string
+         */
+        protected $primaryKey = 'id';
+
+        /**
+         * Decides if the $primaryKey is auto-incrementing. We'll set this to true since the database will store IDs as
+         * integers for simplicity
+         * @var bool
+         */
+        public $incrementing = true;
+
+        /**
+         * Data type to store primary key as
+         * @var string
+         */
+        protected $keyType = 'int';
+
+        /**
+         * What database connection to use. Just keep it is as MySQl unless you really want to use multiple different
+         * databases.
+         * @var string
+         */
+        protected $connection = 'mysql';
+	}
+
 
 ```
 
